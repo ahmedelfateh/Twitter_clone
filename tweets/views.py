@@ -58,6 +58,7 @@ class TweetListView (ListView):
 
     # queryset = Tweet.objects.all()
     # template_name = "tweets/list_view.html"
+    # Revers tweets TEST
 
     def get_context_data(self, *args, **kwargs):
         context = super(TweetListView, self).get_context_data(*args, **kwargs)

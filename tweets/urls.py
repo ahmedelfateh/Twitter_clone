@@ -1,11 +1,10 @@
+from .views import (TweetListView, TweetDetailView,
+                    TweetCreateView, TweetUpdateView,
+                    TweetDeleteView, )
 """tweet app URL Configuration """
 
 from django.conf.urls import url
 from django.views.generic.base import RedirectView
-
-from .views import (TweetListView, TweetDetailView,
-                    TweetCreateView, TweetUpdateView,
-                    TweetDeleteView, )
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url="/")),

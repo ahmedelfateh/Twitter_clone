@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+#---------------The Postgres DB starts
+
+  hlpr_DB:
+    image: postgres
+    environment:
+      POSTGRES_DB: tweetme_postgres
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 50ap1023
+    volumes:
+      - tweetme_DB_data:/var/lib/postgresql/data/ 
+    networks:
+      - HlprNetwork
+
+#---------------The Django Web starts
+  hlpr_web:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    image: tweetme_web_image_local
+    command: python3 manage.py runserver 0.0.0.0:8000 --settings=hlpr_web.settings.local
+    volumes:
+      - .:/src
+      # - ../django_static:/django_static
+    ports:
+      - "80:8000"
+    networks:
+      - tweetmeNetwork
+    depends_on:
+      - hlpr_DB
+
+#---------------The Nginx Web starts
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: tweetme_nginx
+  #   ports:
+  #     - "80:8000"
+  #   # volumes:
+  #   #   - ./src:/src
+  #   #   - ./config/nginx:/etc/nginx/conf.d
+  #   depends_on:
+  #     - web
+
+  # ports:
+  #   - "80:80"
+  #   - "443:443"
+  #   - "8000:8000"
+  # expose:
+  #   - "80"
+  #   - "443"
+  #   - "8000"
+#---------------Volume Create
+volumes:
+  tweetme_DB_data: 
+
+#---------------Network Create
+networks:
+  tweetmeNetwork:

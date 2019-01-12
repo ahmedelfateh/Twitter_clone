@@ -1,0 +1,19 @@
+# Pull base image
+FROM python:3.7
+
+# Set environment varibles
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set work directory
+RUN mkdir /src
+RUN mkdir /django_static
+WORKDIR /src
+
+# Install dependencies
+ADD /requirement/requirement.base.txt /src/
+ADD /requirement/requirement.local.txt /src/
+RUN pip install -r requirement.local.txt
+
+# Copy project
+ADD . /src/

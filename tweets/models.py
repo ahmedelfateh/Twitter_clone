@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from .validators import validate_content
 # Create your models here.
 
 # --------------------------------------Tweet
@@ -9,7 +10,7 @@ from django.utils import timezone
 
 class Tweet(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    content = models.TextField()
+    content = models.TextField(max_length=250, validators=[validate_content, ])
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
 

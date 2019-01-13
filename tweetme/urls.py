@@ -23,7 +23,7 @@ from django.conf import settings
 from .views import home
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls, name='admin'),
     url(r'^$', home, name='home'),
     url(r'^tweets/', include('tweets.urls')),
 ]

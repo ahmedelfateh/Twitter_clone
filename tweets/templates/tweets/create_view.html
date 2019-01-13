@@ -1,7 +1,13 @@
-<form class='form' method="post">
-    
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Tweet">
+{% extends "base.html" %}
 
-</form>
+{% block content %}
+
+    <form class='form' method="post">
+        
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Tweet">
+
+    </form>
+
+{% endblock content %}

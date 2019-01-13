@@ -2,10 +2,17 @@
 
 {% block content %}
 
+        <div class='col-sm-3' style='background-color:gray'>
+            <h3> {{ object.user }} </h3> </br>
+        </div>
 
-    {{ object.content }} </br>
-    {{ object.user }} </br>
-    {{ object.timestamp }} </br>
+        <div class='col-sm-9'>
+            {{ object.id }}
+            </br>
+            {{ object.content }}  
+            </br> </br> 
+            {{ object.timestamp | timesince }} Ago
+        </div>
 
 
 {% endblock content %}

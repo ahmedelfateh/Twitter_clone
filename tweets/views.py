@@ -21,7 +21,6 @@ class TweetCreateView(LoginRequiredMixin, UserNeededMixin, CreateView):
     queryset = Tweet.objects.all()
     form = TweetModelForm
     template_name = "tweets/create_view.html"
-    # success_url = "/tweet"
     login_url = "/admin/"
     fields = [
         # 'user',
@@ -44,7 +43,7 @@ class TweetUpdateView(LoginRequiredMixin, UserOwnerMixin, UpdateView):
 class TweetDeleteView(LoginRequiredMixin, UserNeededMixin, DeleteView):
     queryset = Tweet.objects.all()
     template_name = "tweets/delete_confirm.html"
-    success_url = reverse_lazy('tweet:list')
+    success_url = reverse_lazy('home')
     login_url = "/admin/"
 
 

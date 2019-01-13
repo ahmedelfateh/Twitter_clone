@@ -12,7 +12,8 @@ class TweetDetailView (DetailView):
     template_name = "tweets/detail_view.html"
 
     def get_object(self):
-        return Tweet.objects.get(id=1)
+        pk = self.kwargs.get("pk")
+        return Tweet.objects.get(id=pk)
 
 
 class TweetListView (ListView):

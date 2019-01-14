@@ -1,33 +1,52 @@
 {% extends "base.html" %}
-
 {% block content %}
 
+<div class="row">
 
-    {% for object in object_list %}
+    <div class='col-sm-3' style='background-color:gray'>
+        <h3> {{ request.user }} </h3> </br>
+    </div>
 
-        <div class="row">
+    <div class="col-sm-9">
 
-            <div class='col-sm-3' style='background-color:gray'>
-                <h3> {{ object.user }} </h3> </br>
+        {% if not request.GET.q %}
+        <div>
+            {% include "tweets/form.html" with form=create_form action_url=create_url btn_title="Tweet" %}
+        </div>
+        <hr/>
+        {% endif %}
+
+        {% for object in object_list %}
+
+        <div class="media">
+
+            <div class="media-left">
+                <a href="#">
+                    {%if object.image%}
+                        <img class="media-object" src="..." alt="...">
+                    {%  endif %}
+                </a>
             </div>
 
-            <div class= "col-sm-9">
-                {{ object.content }}</br>
-                {{ object.timestamp | timesince }} Ago 
-                || <a href="{{ object.get_absolute_url }}">View</a>
+            <div class="media-body">
+                {{ object.content }} </br> </br>
+                {{ object.timestamp | timesince }} Ago || 
+                <a href="{{ object.get_absolute_url }}">View</a> <hr/>
             </div>
 
         </div>
 
-        <hr/>
+{% empty %}
 
-    {% empty %}
-    {% if request.GET.q %}
-        <p> no tweets found</p>
-    {% else %}
-        <p> no tweets yet </p>
-    {% endif %}
+{% if request.GET.q %}
+    <p> no tweets found</p>
+{% else %}
+    <p> no tweets yet </p>
+{% endif %}
 
-    {% endfor %}
+{% endfor %}
+
+    </div>
+</div>
 
 {% endblock content %}

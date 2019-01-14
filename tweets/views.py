@@ -19,25 +19,17 @@ from .mixin import UserNeededMixin, UserOwnerMixin
 
 class TweetCreateView(LoginRequiredMixin, UserNeededMixin, CreateView):
     queryset = Tweet.objects.all()
-    form = TweetModelForm
     template_name = "tweets/create_view.html"
     login_url = "/admin/"
-    fields = [
-        # 'user',
-        'content'
-    ]
+    form_class = TweetModelForm
 
 
 class TweetUpdateView(LoginRequiredMixin, UserOwnerMixin, UpdateView):
     queryset = Tweet.objects.all()
-    form = TweetModelForm
+    form_class = TweetModelForm
     # success_url = "/tweet"
     template_name = "tweets/update_view.html"
     login_url = "/admin/"
-    fields = [
-        # 'user',
-        'content'
-    ]
 
 
 class TweetDeleteView(LoginRequiredMixin, UserNeededMixin, DeleteView):
@@ -69,4 +61,6 @@ class TweetListView (ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(TweetListView, self).get_context_data(*args, **kwargs)
+        context["create_form"] = TweetModelForm()
+        context["create_url"] = reverse_lazy("tweet:create")
         return context

@@ -21,17 +21,27 @@
         $(document).ready(function(){
             var query  = getParameterByName('q')
             var tweetList = [];
+            function attachTweet(tweetValue, prepend){
+                var datedisplay = tweetValue.date_display;
+                var tweetContent = tweetValue.content;
+                var tweetUser = tweetValue.user;
+                var tweet_html =    "<div class=\"media\"><div class=\"media-body\">" + tweetContent + 
+                                    "<br/>" + "By: " + tweetUser.username + " | " + datedisplay + " || "
+                                    + "<a href='#'>View</a>" + "</div></div>" + "<hr/>"
+                                    $("#tweet-container")
+                if (prepend==true){
+                    $("#tweet-container").prepend(tweet_html)
+                } else {
+                    $("#tweet-container").append(tweet_html)
+                }
+            }
             function parseTweets(){
                 if (tweetList ==0){
                     $("#tweet-container").text("No Tweets Found")
                 } else {
                         $.each(tweetList, function(key, value){
-                        var tweetKey = key
-                        var tweetContent = value.content
-                        var tweetUser = value.user
-                        $("#tweet-container").append(
-                            "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/>" + "By: " + tweetUser.username + " || " + "<a href='#'>View</a>" + "</div></div>" + "<hr/>"
-                        )
+                        var tweetKey = value.key;
+                        attachTweet(value)
                     })
             }
             }
@@ -63,8 +73,9 @@ $("#tweet-form").submit(function(event){
                     data: formData,
                     method: "POST",
                     success: function(data){
-                        {% comment %} console.log(data) {% endcomment %}
-                        fetchTweets()
+                        this_.find("input[type=text], textarea").val("")
+                        attachTweet(data, true)
+
                     },
                     error: function(data){
                         console.log("error")

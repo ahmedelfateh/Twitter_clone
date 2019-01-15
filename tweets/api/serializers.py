@@ -6,11 +6,12 @@ from tweets.models import Tweet
 
 
 class TweetModelSerializers(serializers.ModelSerializer):
-    user = UserDisplaySerializers()
+    user = UserDisplaySerializers(read_only=True)
 
     class Meta:
         model = Tweet
         fields = [
             'user',
             'content',
+            'timestamp',
         ]

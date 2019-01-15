@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -120,3 +121,6 @@ USE_TZ = True
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+
+# APPEND_SLASH = False

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.urls import reverse_lazy, reverse
+from django.db.models import Q
 
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView

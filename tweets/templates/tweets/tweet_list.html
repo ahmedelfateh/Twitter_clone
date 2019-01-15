@@ -1,45 +1,85 @@
 {% extends "base.html" %}
 
 <style>
-#tweet-container{ }
+#tweet-container{}
 </style>
 
 {% block script %}
 
     <script>
-        console.log("working")
+
+        function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                }
+
         $(document).ready(function(){
-            $.ajax({
-                url:"/api/tweet/",
-                method: "GET",
-                success: function(data){
-                    $.each(data, function(key, value){
+            var query  = getParameterByName('q')
+            var tweetList = [];
+            function parseTweets(){
+                if (tweetList ==0){
+                    $("#tweet-container").text("No Tweets Found")
+                } else {
+                        $.each(tweetList, function(key, value){
                         var tweetKey = key
                         var tweetContent = value.content
                         var tweetUser = value.user
                         $("#tweet-container").append(
-                            {% comment %} "<li>" + tweetContent + "<br/>" + "By: " + tweetUser.username + " | " + "<a href='#'>View</a>" + "</li>" + "<hr/>" {% endcomment %}
-
                             "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/>" + "By: " + tweetUser.username + " || " + "<a href='#'>View</a>" + "</div></div>" + "<hr/>"
                         )
                     })
-                },
-                error: function(data){
-                    console.log("error")
-                    console.log(data)
-                }   
+            }
+            }
+            function fetchTweets(){
+                $.ajax({
+                    url:"/api/tweet/",
+                    data: {
+                        "q": query
+                    },
+                    method: "GET",
+                    success: function(data){
+                        tweetList = data
+                        parseTweets()
+                    },
+                    error: function(data){
+                        console.log("error")
+                        console.log(data)
+                    }   
             })
+            }
+            fetchTweets()
+
+$("#tweet-form").submit(function(event){
+    event.preventDefault()
+    var this_ = $(this)
+    var formData = this_.serialize()
+                $.ajax({
+                    url:"/api/tweet/create",
+                    data: formData,
+                    method: "POST",
+                    success: function(data){
+                        {% comment %} console.log(data) {% endcomment %}
+                        fetchTweets()
+                    },
+                    error: function(data){
+                        console.log("error")
+                        console.log(data)
+                    }   
+            })
+    })
+
 
         });
     </script>
-
 {%endblock script%}
 
 
-
-
 {% block content %}
-
 <div class="row">
 
     <div class='col-sm-3' style='background-color:gray'>
@@ -50,7 +90,7 @@
 
         {% if not request.GET.q %}
         <div>
-            {% include "tweets/form.html" with form=create_form action_url=create_url btn_title="Tweet" %}
+            {% include "tweets/form.html" with form=create_form action_url=create_url btn_title="Tweet" form_id="tweet-form"%}
         </div>
         <hr/>
         {% endif %}

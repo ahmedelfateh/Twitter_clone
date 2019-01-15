@@ -1,8 +1,16 @@
 from django.shortcuts import render
+
 from django.urls import reverse_lazy, reverse
+from django.db.models import Q
 
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
@@ -58,6 +66,7 @@ class TweetListView (ListView):
 
     # queryset = Tweet.objects.all()
     # template_name = "tweets/list_view.html"
+    # Revers tweets TEST
 
     def get_context_data(self, *args, **kwargs):
         context = super(TweetListView, self).get_context_data(*args, **kwargs)

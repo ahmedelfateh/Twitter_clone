@@ -39,7 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # -------------------------------------Third party Apps
+    'crispy_forms',
+    'rest_framework',
+    # -------------------------------------
+    'tweets',
+    'accounts',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,3 +118,9 @@ USE_TZ = True
 ##################
 ##-Static files-##
 ##################
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+
+# APPEND_SLASH = False

@@ -19,8 +19,10 @@
                 }
 
         $(document).ready(function(){
+
             var query  = getParameterByName('q')
             var tweetList = [];
+
             function attachTweet(tweetValue, prepend){
                 var datedisplay = tweetValue.date_display;
                 var tweetContent = tweetValue.content;
@@ -45,17 +47,38 @@
                     })
             }
             }
-            function fetchTweets(){
+
+            var nextTweetUrl;
+            function fetchTweets(url){
+                console.log("fetching...")                
+                var fecthUrl;
+
+                if (!url){
+                    fecthUrl = "/api/tweet/"
+                } else {
+                    fecthUrl = url
+                }
+
                 $.ajax({
-                    url:"/api/tweet/",
+                    url: fecthUrl,
                     data: {
                         "q": query
                     },
+
                     method: "GET",
                     success: function(data){
-                        tweetList = data
+                        console.log(data.next)
+                        console.log(data)
+                        tweetList = data.results
+                        if (data.next){
+                            nextTweetUrl = data.next
+                        } else{
+                            $("#loadmore").css("display", "none")
+                        }
+                        nextTweetUrl = data.next
                         parseTweets()
                     },
+
                     error: function(data){
                         console.log("error")
                         console.log(data)
@@ -63,6 +86,35 @@
             })
             }
             fetchTweets()
+        $('#loadmore').click(function(event){
+            event.preventDefault()
+            if (nextTweetUrl){
+                fetchTweets(nextTweetUrl)
+            }
+        })
+
+var charsStart = 250;
+  var charsCurrent = 0;
+  $("#tweet-form").append("<span id='tweetCharsLeft'>" + charsStart + "</span>")
+  $("#tweet-form textarea").keyup(function(event){
+      var tweetValue = $(this).val()
+      charsCurrent = charsStart - tweetValue.length
+      var spanChars = $("#tweetCharsLeft")
+      spanChars.text(charsCurrent)
+      if (charsCurrent > 0 ) {
+         // remove classes
+         spanChars.removeClass("grey-color")
+         spanChars.removeClass("red-color")
+      } else if (charsCurrent == 0) {
+         // add grey class
+         spanChars.removeClass("red-color")
+         spanChars.addClass("grey-color")
+      } else if (charsCurrent < 0) {
+          // add red class
+          spanChars.removeClass("grey-color")
+          spanChars.addClass("red-color")
+      }
+  })
 
 var charsStart = 250;
   var charsCurrent = 0;
@@ -120,6 +172,12 @@ $("#tweet-form").submit(function(event){
 {%endblock script%}
 
 
+
+
+
+
+
+
 {% block content %}
 <div class="row">
 
@@ -138,6 +196,8 @@ $("#tweet-form").submit(function(event){
 
         <div id="tweet-container">
         </div>
+
+<a href="#" id='loadmore'>load more tweets</a>
 
     </div>
 </div>

@@ -1,15 +1,21 @@
 """accounts URL Configuration """
-
 from django.conf.urls import url
-from django.contrib import admin
-from django.conf.urls import include
+from django.views.generic.base import RedirectView
 
-from django.conf.urls.static import static
-from django.conf import settings
+from django.views.generic.base import RedirectView
+
+from .views import (
+    UserDetailView, )
 
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls, name='admin'), # /admin/
-    # url(r'^$', TweetListView.as_view(), name='home'), # /home/ = http://127.0.0.1:8000
-    # url(r'^tweet/', include('tweets.urls', namespace='tweet')), # + tweets.url
-    # url(r'^api/tweet/', include('tweets.api.urls', namespace='tweet-api')), # + tweets.api.urls
+    # url(r'^$', RedirectView.as_view(url="/")),
+    # url(r'^search/$', TweetListView.as_view(), name='list'),  # /profiles/
+    # url(r'^create/$', TweetCreateView.as_view(),
+    #     name='create'),  # /profiles/create
+    url(r'^(?P<username>[\w.@+-]+)/$', UserDetailView.as_view(),
+        name='detail'),  # /profiles/detail/
+    # url(r'^(?P<pk>\d+)/update/$', TweetUpdateView.as_view(),
+    #     name='update'),  # /profiles/update/
+    # url(r'^(?P<pk>\d+)/delete/$', TweetDeleteView.as_view(),
+    #     name='delete'),  # /profiles/delete/
 ]

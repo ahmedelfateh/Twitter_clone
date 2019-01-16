@@ -1,8 +1,11 @@
 from django.db import models
 from django.conf import settings
-
 from django.urls import reverse_lazy
 
+<< << << < HEAD
+
+== == == =
+>>>>>> >  modified user profile view / modified following & follower func
 # from .managers import UserProfileManager
 
 # ------------------------- inline manager
@@ -40,7 +43,6 @@ class UserProfileManager(models.Manager):
         return False
 
 # ----------------------------------------- Create your models here.
-
 
 
 class UserProfile(models.Model):

@@ -41,12 +41,6 @@ class UserProfileManager(models.Manager):
 
 
 # ----------------------------------------- Create your models here.
-<< << << < HEAD
-
-== == == =
->>>>>> >  modified user profile view / modified following & follower func
-
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(

@@ -42,7 +42,12 @@ class UserProfileManager(models.Manager):
             return True
         return False
 
+
 # ----------------------------------------- Create your models here.
+<< << << < HEAD
+
+== == == =
+>>>>>> >  modified user profile view / modified following & follower func
 
 
 class UserProfile(models.Model):

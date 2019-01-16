@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+
 from django.urls import reverse_lazy
 
 # from .managers import UserProfileManager
@@ -39,6 +40,7 @@ class UserProfileManager(models.Manager):
         return False
 
 # ----------------------------------------- Create your models here.
+
 
 
 class UserProfile(models.Model):

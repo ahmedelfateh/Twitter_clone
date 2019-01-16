@@ -27,10 +27,12 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls, name='admin'),  # /admin/
     url(r'^$', TweetListView.as_view(), name='home'),  # /home/
     url(r'^tweet/', include('tweets.urls', namespace='tweet')),  # + tweets.url
-    url(r'^accounts/', include('accounts.urls',
-                               namespace='accounts')),  # + accounts.url
+    # url(r'^profiles/', include('accounts.urls',
+    #                            namespace='profiles')),  # + accounts.url
     url(r'^api/tweet/', include('tweets.api.urls',
                                 namespace='tweet-api')),  # + tweets.api.urls
+    url(r'^', include('accounts.urls',
+                      namespace='profiles')),  # + accounts.url
 ]
 
 if settings.DEBUG:

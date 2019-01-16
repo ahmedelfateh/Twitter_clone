@@ -39,9 +39,8 @@ class UserProfileManager(models.Manager):
             return True
         return False
 
+
 # ----------------------------------------- Create your models here.
-
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(

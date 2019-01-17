@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+
+    <div class='col-sm-3'>
+        <h3> {{ obj.tag }} </h3> </br>
+    </div>
+
+    <div class="col-sm-9">
+
+        {% for tweet in obj.get_tweets %}
+        {{ tweet.content }} <br/>
+        By {{ tweet.user }} || 
+        {{ tweet.timestamp | timesince }} Ago <br/> <hr/>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock content %}

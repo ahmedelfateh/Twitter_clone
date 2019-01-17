@@ -12,12 +12,6 @@ from django.views.generic.edit import DeleteView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.views.generic.edit import CreateView
-from django.views.generic.edit import UpdateView
-from django.views.generic.edit import DeleteView
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 from .forms import TweetModelForm
 from .models import Tweet
 from .mixin import UserNeededMixin, UserOwnerMixin

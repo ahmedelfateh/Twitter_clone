@@ -20,6 +20,7 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from hashtags.views import HashTagView
 from .views import home
 from tweets.views import TweetListView
 
@@ -33,6 +34,9 @@ urlpatterns = [
                                 namespace='tweet-api')),  # + tweets.api.urls
     url(r'^', include('accounts.urls',
                       namespace='profiles')),  # + accounts.url
+    url(r'^tags/(?P<hashtag>.*)/$', HashTagView.as_view(), name='hashtag'),
+    # url(r'^hashtags/', include('hashtags.urls',
+    #                            namespace='hashtags')),  # + hashtags.url
 ]
 
 if settings.DEBUG:

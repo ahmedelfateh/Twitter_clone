@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # -------------------------------------
     'tweets',
     'accounts',
+    'hashtags',
 ]
 
 

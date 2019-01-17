@@ -35,9 +35,11 @@ function updateHashLinks(){
                 var datedisplay = tweetValue.date_display;
                 var tweetContent = tweetValue.content;
                 var tweetUser = tweetValue.user;
-                var tweet_html =    "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/>" +
+                var tweetId = tweetValue.id;
+                var isRetweet = tweetValue.is_retweet;
+                var tweet_html =    "<div class=\"media\"> "+ isRetweet +" <div class=\"media-body\">" + tweetContent + "<br/>" +
                                     " By <a href='"+ tweetUser.url +"' > " + tweetUser.username + " </a>| "
-                                    + datedisplay + " || " + "<a href='#'>View</a>" + "</div></div>" + "<hr/>"
+                                    + datedisplay + " || " + "<a href='/tweet/"+tweetId+"'>View</a>" + "</div></div>" + "<hr/>"
                                     $("#tweet-container")
                 if (prepend==true){
                     $("#tweet-container").prepend(tweet_html)

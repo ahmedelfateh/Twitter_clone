@@ -31,16 +31,34 @@ function updateHashLinks(){
         
     })
 }
-            function attachTweet(tweetValue, prepend){
+            function attachTweet(tweetValue, prepend, retweet){
                 var datedisplay = tweetValue.date_display;
                 var tweetContent = tweetValue.content;
                 var tweetUser = tweetValue.user;
                 var tweetId = tweetValue.id;
-                var isRetweet = tweetValue.is_retweet;
-                var tweet_html =    "<div class=\"media\"> "+ isRetweet +" <div class=\"media-body\">" + tweetContent + "<br/>" +
-                                    " By <a href='"+ tweetUser.url +"' > " + tweetUser.username + " </a>| "
-                                    + datedisplay + " || " + "<a href='/tweet/"+tweetId+"'>View</a>" + "</div></div>" + "<hr/>"
-                                    $("#tweet-container")
+                var tweet_html;
+
+                if (retweet && tweetValue.parent){
+                    var mainTweet=tweetValue.parent
+tweet_html =    "<div class=\"media\"><div class=\"media-body\">"
++ " <a href='"+ tweetUser.url +"' > " + tweetUser.username + " </a> " + " Retweeted || "
++ "at " + datedisplay +"<br/>" + mainTweet.content + "<br/>"
++ " By <a href='"+ mainTweet.user.url +"' > " + mainTweet.user.username + " </a>| "
++ mainTweet.date_display + " || " + "<a href='/tweet/"+mainTweet.id+"'>View</a> || "
++ "<a href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>"
++ "</div></div>" + "<hr/>"
+
+                } else {
+
+tweet_html =    "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/>"
++ " By <a href='"+ tweetUser.url +"' > " + tweetUser.username + " </a>|| "
++ datedisplay + " || " + "<a href='/tweet/"+tweetId+"'>View</a> || " 
++ "<a href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>"
++ "</div></div>" + "<hr/>"
+
+                }
+
+                $("#tweet-container")
                 if (prepend==true){
                     $("#tweet-container").prepend(tweet_html)
                 } else {
@@ -53,14 +71,17 @@ function updateHashLinks(){
                 } else {
                         $.each(tweetList, function(key, value){
                         var tweetKey = value.key;
-                        attachTweet(value)
+                        if (value.parent) {
+                            attachTweet(value, false, true)
+                        } else {
+                            attachTweet(value)
+                        }
                     })
             }
             }
 
             var nextTweetUrl;
-            function fetchTweets(url){
-                console.log("fetching...")                
+            function fetchTweets(url){               
                 var fecthUrl;
 
                 if (!url){
@@ -77,8 +98,6 @@ function updateHashLinks(){
 
                     method: "GET",
                     success: function(data){
-                        console.log(data.next)
-                        console.log(data)
                         tweetList = data.results
                         if (data.next){
                             nextTweetUrl = data.next

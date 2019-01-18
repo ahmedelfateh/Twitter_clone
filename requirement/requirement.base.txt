@@ -8,6 +8,6 @@ setuptools==40.2.0
 wheel==0.31.1
 psycopg2==2.7.5  
 psycopg2-binary==2.7.5
-djangorestframework==3.8.2
+djangorestframework==3.6.4
 
 # django-split-settings==0.3.0

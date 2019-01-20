@@ -64,6 +64,8 @@ class UserProfile(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("profiles:detail", kwargs={"username": self.user.username})
 
+# --------------------------------------Signal
+
 
 def post_save_user_receiver(sender, instance, created, *args, **kwargs):
     if created:

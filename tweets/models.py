@@ -1,8 +1,11 @@
+import re
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 from django.urls import reverse_lazy, reverse
+
+from django.db.models.signals import post_save
 
 from .validators import validate_content
 # --------------------------------------inline Manager
@@ -23,7 +26,7 @@ class TweetManager(models.Manager):
             timestamp__day=timezone.now().day,
         )
         if qs.exists():
-                return None
+            return None
 
         obj = self.model(
             parent=og_parent,
@@ -53,3 +56,19 @@ class Tweet(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+
+# --------------------------------------Signal
+
+
+def post_save_tweet_receiver(sender, instance, created, *args, **kwargs):
+    if created and not instance.parent:
+        user_regex = r'@(?P<username>[\w.@+-]+)'
+        username = re.findall(user_regex, instance.content)
+        print(username)
+
+        hashtag_regex = r'#(?P<hashtag>[\w\d-]+)'
+        hashtag = re.findall(hashtag_regex, instance.content)
+        print(hashtag)
+
+
+post_save.connect(post_save_tweet_receiver, sender=Tweet)

@@ -96,8 +96,16 @@ $(document.body).on("click", ".tweet-like", function(e){
     var this_ = $(this)
     var parentId = this_.attr("data-id")
     var username = this_.attr("data-user")
+    var content = this_.parent().parent().find(".content").text()
+
+    $("#replyModal textarea").after("<input type='hidden' value='" + parentId + "' name='parent_id' />")
+    $("#replyModal textarea").after("<input type='hidden' value='" + true + "' name='reply' />")
+
     $("#replyModal").modal({})
     $("#replyModal textarea").val("@" + username + " ")
+
+    $("#replyModal #replyModalLabel").text("Reply to " + content)
+
     $("#replyModal").on("shown.bs.modal", function(){
       $('textarea').focus()
     })
@@ -166,7 +174,7 @@ var retweet;
             verb = 'Unlike'
                 }
 
-tweetContent = tweetValue.content + "<br/>"
+tweetContent = "<span class='content'>" + tweetValue.content + "</span><br/>"
 
     + " By <a href='"+ tweetValue.user.url +"' > " + tweetValue.user.username + " </a>|| "
 
@@ -260,7 +268,7 @@ tweetContent = tweetValue.content + "<br/>"
 
 var charsStart = 250;
   var charsCurrent = 0;
-  $(".tweet-form").append("<span class='tweetCharsLeft'>" + charsStart + "</span>")
+  $(".tweet-form").append("<span class='tweetCharsLeft' style='margin-left: 20px'>" + charsStart + " left</span>")
   $(".tweet-form textarea").keyup(function(event){
       var tweetValue = $(this).val()
       charsCurrent = charsStart - tweetValue.length

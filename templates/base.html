@@ -34,6 +34,8 @@
 
     </div>
 
+    {% include "reply-modal.html" %}
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -61,7 +63,71 @@ function loadTweetContainer(tweetContainerID){
             } else {
               tweetContainer = $("#tweet-container")
             }
-            var initialURL = tweetContainer.attr("data-url") || "/api/tweet/"            
+            var initialURL = tweetContainer.attr("data-url") || "/api/tweet/"    
+
+
+$(document.body).on("click", ".tweet-like", function(e){
+    e.preventDefault()
+    var this_ = $(this)
+    var tweetId = this_.attr("data-id")
+    var likedUrl = '/api/tweet/' + tweetId + "/like/"
+
+    $.ajax({
+        method:"GET",
+        url: likedUrl,
+        success: function(data){
+        if (data.liked){
+            this_.text("Liked")
+        } else {
+            this_.text("Unliked")
+        }
+        },
+        error: function(data){
+        console.log("error")
+        console.log(data)
+        }
+    })
+})
+
+
+
+ $(document.body).on("click", ".tweet-reply", function(e){
+    e.preventDefault()
+    var this_ = $(this)
+    var parentId = this_.attr("data-id")
+    var username = this_.attr("data-user")
+    $("#replyModal").modal({})
+    $("#replyModal textarea").val("@" + username + " ")
+    $("#replyModal").on("shown.bs.modal", function(){
+      $('textarea').focus()
+    })
+  })
+
+
+
+
+ $(document.body).on("click", ".retweetBtn", function(e){
+    e.preventDefault()
+    console.log("clicked")
+    var url = "/api" + $(this).attr("href")
+    $.ajax({
+      method: "GET",
+      url: url,
+      success: function (data) {
+        console.log(data)
+        // if username is in the API path... let's ignore 
+        if (initialURL == "/api/tweet/") {
+          attachTweet(data, true, true)
+          updateHashLinks()
+        }
+        
+      },
+      error: function(data){
+        console.log("error")
+        console.log(data)
+      }
+    })
+  })
 
 function updateHashLinks(){
     $(".media-body").each(function(data){
@@ -75,32 +141,59 @@ function updateHashLinks(){
         
     })
 }
-            function attachTweet(tweetValue, prepend, retweet){
-                var datedisplay = tweetValue.date_display;
-                var tweetContent = tweetValue.content;
-                var tweetUser = tweetValue.user;
-                var tweetId = tweetValue.id;
-                var tweet_html;
+/////////////////////////-------------------------- Tweet format
+function formatTweet(tweetValue){
 
-                if (retweet && tweetValue.parent){
-                    var mainTweet=tweetValue.parent
-tweet_html =    "<div class=\"media\"><div class=\"media-body\">"
-+ " <a href='"+ tweetUser.url +"' > " + tweetUser.username + " </a> " + " Retweeted || "
-+ "at " + datedisplay +"<br/>" + mainTweet.content + "<br/>"
-+ " By <a href='"+ mainTweet.user.url +"' > " + mainTweet.user.username + " </a>| "
-+ mainTweet.date_display + " || " + "<a href='/tweet/"+mainTweet.id+"'>View</a> || "
-+ "<a href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>"
-+ "</div></div>" + "<hr/>"
+var datedisplay = tweetValue.date_display;
+var tweetContent = tweetValue.content;
+var tweetUser = tweetValue.user;
+var tweetId = tweetValue.id;
+var isReply = tweetValue.reply;
+var tweetContent;
+var preContent;
+var container;
+var retweet;
 
-                } else {
+    if (tweetValue.parent && !isReply) {
+        tweetValue = tweetValue.parent
+        preContent = " <a href='"+ tweetValue.user.url +"' > " + tweetValue.user.username + " </a> " + " Retweeted || "+ "at " + tweetValue.datedisplay
+    } else if (tweetValue.parent && isReply) {
+        preContent = " <a href='"+ tweetValue.user.url +"' > " + tweetValue.user.username + " </a> " + " Retweeted "
+    }
 
-tweet_html =    "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/>"
-+ " By <a href='"+ tweetUser.url +"' > " + tweetUser.username + " </a>|| "
-+ datedisplay + " || " + "<a href='/tweet/"+tweetId+"'>View</a> || " 
-+ "<a href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>"
-+ "</div></div>" + "<hr/>"
-
+    var verb = 'Like'
+    if (tweetValue.did_like){
+            verb = 'Unlike'
                 }
+
+tweetContent = tweetValue.content + "<br/>"
+
+    + " By <a href='"+ tweetValue.user.url +"' > " + tweetValue.user.username + " </a>|| "
+
+    + tweetValue.datedisplay + " || " + "<a href='/tweet/"+tweetId+"'>View</a> || " 
+
+    + "<a class='retweetBtn' href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>"
+
+    + " || <a href='#' class='tweet-like' data-id=" + tweetValue.id + ">" + verb + " [ " + tweetValue.likes + " ]</a>"
+
+    + " || <a href='#' class='tweet-reply' data-id=" + tweetValue.id + ">Reply</a>"
+
+
+    if (retweet){
+            container = "<div class=\"media\"><div class=\"media-body\">"+ retweet + tweetContent +"</a></div></div><hr/>"
+    } else {
+            container = "<div class=\"media\"><div class=\"media-body\">"+ tweetContent +"</a></div></div><hr/>"
+    }
+
+
+    return container
+}
+
+
+            function attachTweet(tweetValue, prepend, retweet){
+                var tweet_html;
+                tweet_html = formatTweet(tweetValue)
+
                 if (prepend==true){
                     tweetContainer.prepend(tweet_html)
                 } else {
@@ -167,11 +260,11 @@ tweet_html =    "<div class=\"media\"><div class=\"media-body\">" + tweetContent
 
 var charsStart = 250;
   var charsCurrent = 0;
-  $("#tweet-form").append("<span id='tweetCharsLeft'>" + charsStart + "</span>")
-  $("#tweet-form textarea").keyup(function(event){
+  $(".tweet-form").append("<span class='tweetCharsLeft'>" + charsStart + "</span>")
+  $(".tweet-form textarea").keyup(function(event){
       var tweetValue = $(this).val()
       charsCurrent = charsStart - tweetValue.length
-      var spanChars = $("#tweetCharsLeft")
+      var spanChars = $(this).parent().parent().parent().find("span.tweetCharsLeft")
       spanChars.text(charsCurrent)
       if (charsCurrent > 0 ) {
          // remove classes
@@ -189,7 +282,7 @@ var charsStart = 250;
   })
 
 
-$("#tweet-form").submit(function(event){
+$(".tweet-form").submit(function(event){
     event.preventDefault()
     var this_ = $(this)
     var formData = this_.serialize()
@@ -203,6 +296,7 @@ $("#tweet-form").submit(function(event){
             this_.find("input[type=text], textarea").val("")
             attachTweet(data, true)
             updateHashLinks()
+            $("#replyModal").modal("hide")
            
           },
           error: function(data){

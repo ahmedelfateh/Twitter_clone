@@ -9,10 +9,10 @@ from .forms import TweetModelForm
 
 
 class TweetModeladmin(admin.ModelAdmin):
-    form = TweetModelForm
+    # form = TweetModelForm
 
-    class Meta:
-        model = Tweet
+    # class Meta:
+    #     model = Tweet
 
-
-admin.site.register(Tweet, TweetModeladmin)
+    # admin.site.register(Tweet, TweetModeladmin)
+    admin.site.register(Tweet)

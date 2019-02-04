@@ -32,6 +32,8 @@ urlpatterns = [
     #                            namespace='profiles')),  # + accounts.url
     url(r'^api/tweet/', include('tweets.api.urls',
                                 namespace='tweet-api')),  # + tweets.api.urls
+    url(r'^api/', include('accounts.api.urls',
+                          namespace='profiles-api')),  # + tweets.api.urls
     url(r'^', include('accounts.urls',
                       namespace='profiles')),  # + accounts.url
     url(r'^tags/(?P<hashtag>.*)/$', HashTagView.as_view(), name='hashtag'),

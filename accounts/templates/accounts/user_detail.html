@@ -1,6 +1,18 @@
 
 {% extends "base.html" %}
 
+
+{% block script %}
+
+    <script>
+        $(document).ready(function(){
+            loadTweetContainer("tweet-container")
+                });
+    </script>
+
+{%endblock script%}
+
+
 {% block content %}
 <div class='row'>
         <div class='col-sm-3' style='background-color:#CCC'>
@@ -13,30 +25,30 @@
                     {% if following %} Unfollow {% else %} Follow {% endif %}
                 </a>
             </p>
+                <h3> Following </h3>
+                {% for user in object.profile.get_following %}
+                <a href="/{{user.username}}"> {{ user.username }} </a> </br> 
+                <hr/>
+                {% empty %}
+                <p> Not Following any user  </p>
+                {% endfor %}
+
+                <h3> Followers </h3>
+                {% for profile in object.followed_by.all %}
+                <a href="/{{ profile.user.username }}"> {{ profile.user.username }} </a> </br>
+                <hr/>
+                {% empty %}
+                <p> Not Followed by any user  </p>
+                {% endfor %}
         </div>
 
         <div class='col-sm-9'>
-            <h3> Tweets </h3>
-            {% for tweet in object.tweet_set.all %}
-            {{ tweet }} </br> 
-            <hr/>
-            {% endfor %}
+            <h3> My Tweets </h3>
 
-            <h3> Following </h3>
-            {% for user in object.profile.get_following %}
-            <a href="/{{user.username}}"> {{ user.username }} </a> </br> 
-            <hr/>
-            {% empty %}
-            <p> Not Following any user  </p>
-            {% endfor %}
+                <div id="tweet-container" data-url='/api/{{object.username}}/tweet/'>
+                </div>
+                <a href="#" id='loadmore'>load more tweets</a> </br>
 
-            <h3> Followers </h3>
-            {% for profile in object.followed_by.all %}
-            <a href="/{{ profile.user.username }}"> {{ profile.user.username }} </a> </br>
-            <hr/>
-            {% empty %}
-            <p> Not Followed by any user  </p>
-            {% endfor %}
         </div>
 </div>
 

@@ -8,7 +8,7 @@ from .views import (
     TweetListAPIView,
     RetweetAPIView,
     LikeToggleAPIView,
-
+    TweetDetailAPIView,
 )
 
 urlpatterns = [
@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/retweet/$', RetweetAPIView.as_view(), name='retweet'),
     url(r'^(?P<pk>\d+)/like/$', LikeToggleAPIView.as_view(), name='like-toggle'),
     url(r'^(?P<pk>\d+)/retweet/$', RetweetAPIView.as_view(), name='retweet'),
+    url(r'^(?P<pk>\d+)/$', TweetDetailAPIView.as_view(), name='detail'),
 ]
